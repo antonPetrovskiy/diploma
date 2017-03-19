@@ -19,6 +19,7 @@ public class ServerActivity extends AppCompatActivity {
     Button setFileButton;
     EditText roomNameText;
     EditText pathText;
+    String path;
     private SeekBar seekBar;
     MusicPlayer musicPlayer;
     public static final int REQ_CODE_PICK_SOUNDFILE = 0;
@@ -33,7 +34,7 @@ public class ServerActivity extends AppCompatActivity {
         playButton.setEnabled(false);
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
-        shareButton.setEnabled(false);
+        shareButton.setEnabled(true);
     }
 
     private void initViews() {
@@ -62,17 +63,13 @@ public class ServerActivity extends AppCompatActivity {
             if ((data != null) && (data.getData() != null)){
                 String s = data.getDataString();
                 pathText.setText(s);
+                path = s;
             }
         }
     }
 
     public void setFileButton(View view){
         openFile();
-        playButton.setEnabled(true);
-        pauseButton.setEnabled(true);
-        shareButton.setEnabled(true);
-
-
     }
 
     private void seekChange(View v){
@@ -104,7 +101,7 @@ public class ServerActivity extends AppCompatActivity {
     }
 
     public void shareButton(View view){
-        musicPlayer.setFromPath("android.resource://tk.bugnotwolf.sharejack/" + R.raw.song);
+        musicPlayer.setFromPath(path);
         shareButton.setEnabled(false);
         seekBar.setMax(musicPlayer.getPlayer().getDuration());
         seekBar.setOnTouchListener(new View.OnTouchListener() {
@@ -114,5 +111,9 @@ public class ServerActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        playButton.setEnabled(true);
+        pauseButton.setEnabled(true);
+        shareButton.setEnabled(true);
     }
 }

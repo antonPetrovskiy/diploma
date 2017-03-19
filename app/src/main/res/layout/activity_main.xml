@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -14,38 +15,46 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="12dp"
-        android:layout_alignParentTop="true"
+        android:weightSum="1"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:weightSum="1">
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="111dp"
+            app:srcCompat="@drawable/bear"
+            android:layout_weight="0.60" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.13" />
+            android:layout_weight="0.10" />
 
         <Button
-            android:text="Server Activity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/serverButton"
-            android:layout_weight="0.18"
+            style="@android:style/Widget.Holo.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.07"
             android:elevation="0dp"
-            android:onClick="toServer" />
+            android:onClick="toServer"
+            android:text="создать комнату" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.21" />
+            android:layout_weight="0.10" />
 
         <Button
-            android:text="Client Activity"
+            android:id="@+id/clientButton"
+            style="@android:style/Widget.Holo.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/clientButton"
-            android:layout_weight="0.20"
+            android:layout_weight="0.07"
             android:elevation="0dp"
-            android:onClick="toClient" />
+            android:onClick="toClient"
+            android:text="подключиться к комнате " />
     </LinearLayout>
 </RelativeLayout>
