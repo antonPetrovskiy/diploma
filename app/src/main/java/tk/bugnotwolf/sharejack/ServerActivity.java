@@ -2,6 +2,7 @@ package tk.bugnotwolf.sharejack;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -9,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
+
+import tk.bugnotwolf.sharejack.serverevents.StreamListener;
+import tk.bugnotwolf.sharejack.serverevents.StreamStatus;
+import tk.bugnotwolf.sharejack.serverevents.WebSocketListener;
 
 public class ServerActivity extends AppCompatActivity {
 
@@ -24,10 +29,41 @@ public class ServerActivity extends AppCompatActivity {
     MusicPlayer musicPlayer;
     public static final int REQ_CODE_PICK_SOUNDFILE = 0;
 
+    private StreamListener streamListener = new WebSocketListener("http://192.168.0.105") {
+        @Override
+        public void onPlay(StreamStatus status) {
+            int msec = status.getCurrentTime() * 1000;
+            musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
+            musicPlayer.startAudio();
+        }
+
+        @Override
+        public void onPause(StreamStatus status) {
+            musicPlayer.pauseAudio();
+            int msec = status.getCurrentTime() * 1000;
+            musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
+        }
+
+        @Override
+        public void onVolumeChange(StreamStatus status) {
+            float volume = (float) status.getVolume();
+            musicPlayer.getPlayer().setVolume(volume, volume);
+        }
+
+        @Override
+        public void onTimeChange(StreamStatus status) {
+            int msec = status.getCurrentTime() * 1000;
+            musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
+        }
+    };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initViews();
         musicPlayer = new MusicPlayer(this);
         setFileButton.setEnabled(true);
@@ -68,6 +104,10 @@ public class ServerActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+    //BUTTONS
     public void setFileButton(View view){
         openFile();
     }
@@ -80,28 +120,33 @@ public class ServerActivity extends AppCompatActivity {
     }
 
     public void playButton(View view){
-        musicPlayer.startAudio();
+        //musicPlayer.startAudio();
+        streamListener.play(musicPlayer.getPlayer().getCurrentPosition()/1000);
         stopButton.setEnabled(true);
         playButton.setEnabled(false);
         pauseButton.setEnabled(true);
     }
 
     public void pauseButton(View view){
-        musicPlayer.pauseAudio();
+        //musicPlayer.pauseAudio();
+
+        streamListener.pause(musicPlayer.getPlayer().getCurrentPosition()/1000);
         pauseButton.setEnabled(false);
         playButton.setEnabled(true);
         stopButton.setEnabled(true);
     }
 
     public void stopButton(View view){
-        musicPlayer.stopAudio();
+        //musicPlayer.stopAudio();
+        streamListener.stop();
         playButton.setEnabled(true);
         stopButton.setEnabled(false);
         pauseButton.setEnabled(false);
     }
 
     public void shareButton(View view){
-        musicPlayer.setFromPath(path);
+        streamListener.connect();
+        musicPlayer.setFromServer("http://192.168.0.105/audio/ADC17605.mp3");
         shareButton.setEnabled(false);
         seekBar.setMax(musicPlayer.getPlayer().getDuration());
         seekBar.setOnTouchListener(new View.OnTouchListener() {

@@ -14,7 +14,7 @@ import io.socket.client.Socket;
 public abstract class WebSocketListener implements StreamListener {
     private static final String TAG = WebSocketListener.class.getSimpleName();
 
-    private Socket socket;
+    private static Socket socket;
 
     public WebSocketListener(String uri) {
         try {
@@ -36,6 +36,21 @@ public abstract class WebSocketListener implements StreamListener {
     @Override
     public void disconnect() {
         socket.disconnect();
+    }
+
+    @Override
+    public void pause(int t){
+        socket.emit("pause", t);
+    }
+
+    @Override
+    public void play(int t){
+        socket.emit("play", t);
+    }
+
+    @Override
+    public void stop(){
+        socket.emit("pause", 0);
     }
 
     private StreamStatus parseStatus(Object[] args) {

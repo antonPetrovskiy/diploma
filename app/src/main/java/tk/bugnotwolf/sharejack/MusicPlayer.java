@@ -134,8 +134,7 @@ public class MusicPlayer implements OnPreparedListener{
         ready = true;
         Toast.makeText(activity, "Стрим с сервера готов", Toast.LENGTH_LONG).show();
         //TODO mPlayer.seekTo() current position and mPlayer.start() if music is playing now
-        Button playButton = (Button) activity.findViewById(R.id.playButton);
-        playButton.setEnabled(true);
+
     }
 
     public MediaPlayer getPlayer(){

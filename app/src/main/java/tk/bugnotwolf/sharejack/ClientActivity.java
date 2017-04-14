@@ -1,5 +1,6 @@
 package tk.bugnotwolf.sharejack;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,12 +46,15 @@ public class ClientActivity extends AppCompatActivity {
             int msec = status.getCurrentTime() * 1000;
             musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
         }
+
+
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client);
+        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         connectStreamButton = (Button) findViewById(R.id.connectstreamButton);
         disconnectStreamButton = (Button) findViewById(R.id.disconnectStreamButton);

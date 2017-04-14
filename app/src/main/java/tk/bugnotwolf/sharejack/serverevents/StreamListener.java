@@ -12,4 +12,10 @@ public interface StreamListener {
     void onVolumeChange(StreamStatus status);
 
     void onTimeChange(StreamStatus status);
+
+    void pause(int t);
+
+    void play(int t);
+
+    void stop();
 }
