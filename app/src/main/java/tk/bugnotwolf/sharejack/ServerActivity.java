@@ -55,6 +55,14 @@ public class ServerActivity extends AppCompatActivity {
             int msec = status.getCurrentTime() * 1000;
             musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
         }
+
+        @Override
+        public void onStatus(StreamStatus status) {
+            int msec = status.getCurrentTime() * 1000;
+            musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
+            if(status.isPlaying())
+                musicPlayer.startAudio();
+        }
     };
 
 
@@ -71,6 +79,7 @@ public class ServerActivity extends AppCompatActivity {
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
         shareButton.setEnabled(true);
+        seekBar.setMax(180000);
     }
 
     private void initViews() {
@@ -104,6 +113,12 @@ public class ServerActivity extends AppCompatActivity {
         }
     }
 
+    private void seekChange(View v){
+        if (musicPlayer.getPlayer().isPlaying()) {
+            SeekBar sb = (SeekBar) v;
+            streamListener.play(seekBar.getProgress()/1000);
+        }
+    }
 
 
 
@@ -112,15 +127,7 @@ public class ServerActivity extends AppCompatActivity {
         openFile();
     }
 
-    private void seekChange(View v){
-        if (musicPlayer.getPlayer().isPlaying()) {
-            SeekBar sb = (SeekBar) v;
-            musicPlayer.getPlayer().seekTo(sb.getProgress());
-        }
-    }
-
     public void playButton(View view){
-        //musicPlayer.startAudio();
         streamListener.play(musicPlayer.getPlayer().getCurrentPosition()/1000);
         stopButton.setEnabled(true);
         playButton.setEnabled(false);
@@ -128,8 +135,6 @@ public class ServerActivity extends AppCompatActivity {
     }
 
     public void pauseButton(View view){
-        //musicPlayer.pauseAudio();
-
         streamListener.pause(musicPlayer.getPlayer().getCurrentPosition()/1000);
         pauseButton.setEnabled(false);
         playButton.setEnabled(true);
@@ -137,7 +142,6 @@ public class ServerActivity extends AppCompatActivity {
     }
 
     public void stopButton(View view){
-        //musicPlayer.stopAudio();
         streamListener.stop();
         playButton.setEnabled(true);
         stopButton.setEnabled(false);
@@ -146,9 +150,9 @@ public class ServerActivity extends AppCompatActivity {
 
     public void shareButton(View view){
         streamListener.connect();
-        musicPlayer.setFromServer("http://192.168.0.105/audio/ADC17605.mp3");
+        musicPlayer.setFromServer("http://192.168.0.105/audio/ACDC.mp3");
         shareButton.setEnabled(false);
-        seekBar.setMax(musicPlayer.getPlayer().getDuration());
+
         seekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -157,6 +161,10 @@ public class ServerActivity extends AppCompatActivity {
             }
         });
 
+        pathText.setEnabled(false);
+        roomNameText.setEnabled(false);
+        shareButton.setEnabled(false);
+        setFileButton.setEnabled(false);
         playButton.setEnabled(true);
         pauseButton.setEnabled(true);
         shareButton.setEnabled(true);

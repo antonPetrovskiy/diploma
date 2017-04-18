@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import tk.bugnotwolf.sharejack.serverevents.StreamListener;
 import tk.bugnotwolf.sharejack.serverevents.StreamStatus;
@@ -16,6 +17,9 @@ public class ClientActivity extends AppCompatActivity {
     Button disconnectStreamButton;
     Button connectStreamButton;
     Button muteButton;
+    Button timeMinus;
+    Button timePlus;
+    EditText roomName;
     private boolean muted;
 
     private MusicPlayer musicPlayer = new MusicPlayer(this);
@@ -47,7 +51,13 @@ public class ClientActivity extends AppCompatActivity {
             musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
         }
 
-
+        @Override
+        public void onStatus(StreamStatus status) {
+            int msec = status.getCurrentTime() * 1000;
+            musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
+            if(status.isPlaying())
+                musicPlayer.startAudio();
+        }
     };
 
     @Override
@@ -59,6 +69,8 @@ public class ClientActivity extends AppCompatActivity {
         connectStreamButton = (Button) findViewById(R.id.connectstreamButton);
         disconnectStreamButton = (Button) findViewById(R.id.disconnectStreamButton);
         muteButton = (Button) findViewById(R.id.muteButton);
+        timeMinus = (Button) findViewById(R.id.minusButton);
+        timePlus = (Button) findViewById(R.id.plusBotton);
 
         connectStreamButton.setEnabled(true);
         disconnectStreamButton.setEnabled(false);
@@ -66,11 +78,16 @@ public class ClientActivity extends AppCompatActivity {
     }
 
     public void connectStreamButton(View view) {
-        musicPlayer.setFromServer("http://192.168.0.105/audio/ADC17605.mp3");
+        roomName = (EditText)findViewById(R.id.roomName);
         streamListener.connect();
-        connectStreamButton.setEnabled(false);
-        disconnectStreamButton.setEnabled(true);
-        muteButton.setEnabled(true);
+        if(musicPlayer.setFromServer("http://192.168.0.105/audio/"+roomName.getText().toString()+".mp3")){
+            streamListener.update();
+
+            roomName.setEnabled(false);
+            connectStreamButton.setEnabled(false);
+            disconnectStreamButton.setEnabled(true);
+            muteButton.setEnabled(true);
+        }
     }
 
     public void disconnectStreamButton(View view) {
@@ -80,7 +97,6 @@ public class ClientActivity extends AppCompatActivity {
         disconnectStreamButton.setEnabled(false);
         muteButton.setEnabled(false);
     }
-
 
     public void muteButton(View view){
         musicPlayer.muteAudio();
@@ -92,4 +108,13 @@ public class ClientActivity extends AppCompatActivity {
             muted = true;
         }
     }
+
+    public void plusButton(View view){
+        musicPlayer.getPlayer().seekTo(musicPlayer.getPlayer().getCurrentPosition()+100);
+    }
+
+    public void minusButton(View view){
+        musicPlayer.getPlayer().seekTo(musicPlayer.getPlayer().getCurrentPosition()-100);
+    }
+
 }

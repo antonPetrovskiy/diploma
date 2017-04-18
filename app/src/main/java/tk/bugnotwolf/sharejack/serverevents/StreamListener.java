@@ -13,6 +13,10 @@ public interface StreamListener {
 
     void onTimeChange(StreamStatus status);
 
+    void onStatus(StreamStatus status);
+
+    void update();
+
     void pause(int t);
 
     void play(int t);

@@ -25,6 +25,8 @@ public class MusicPlayer implements OnPreparedListener{
         activity = a;
     }
 
+
+    //delete
     public void setFromPath(String s){
         mPlayer = new MediaPlayer();
         try {
@@ -39,7 +41,7 @@ public class MusicPlayer implements OnPreparedListener{
     }
 
 
-    public void setFromServer(String s){
+    public boolean setFromServer(String s){
         mPlayer = new MediaPlayer();
         serverAddress = s;
         try {
@@ -49,14 +51,13 @@ public class MusicPlayer implements OnPreparedListener{
             mPlayer.prepareAsync();
         } catch (IOException e) {
             Toast.makeText(activity, "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
+            return false;
         }
-
+        return true;
     }
 
     public void startAudio() {
-        if (ready)
-
-            mPlayer.start();
+        mPlayer.start();
     }
 
     public void startStreamAudio(){
@@ -133,8 +134,6 @@ public class MusicPlayer implements OnPreparedListener{
     public void onPrepared(MediaPlayer mp) {
         ready = true;
         Toast.makeText(activity, "Стрим с сервера готов", Toast.LENGTH_LONG).show();
-        //TODO mPlayer.seekTo() current position and mPlayer.start() if music is playing now
-
     }
 
     public MediaPlayer getPlayer(){

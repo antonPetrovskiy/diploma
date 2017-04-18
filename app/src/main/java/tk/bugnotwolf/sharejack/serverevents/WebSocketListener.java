@@ -26,6 +26,7 @@ public abstract class WebSocketListener implements StreamListener {
         socket.on("pause", a -> onPause(parseStatus(a)));
         socket.on("volumeChange", a -> onVolumeChange(parseStatus(a)));
         socket.on("timeChange", a -> onTimeChange(parseStatus(a)));
+        socket.on("status", a -> onStatus(parseStatus(a)));
     }
 
     @Override
@@ -36,6 +37,11 @@ public abstract class WebSocketListener implements StreamListener {
     @Override
     public void disconnect() {
         socket.disconnect();
+    }
+
+    @Override
+    public void update(){
+        socket.emit("update");
     }
 
     @Override
