@@ -40,7 +40,7 @@
             android:layout_weight="0.07"
             android:elevation="0dp"
             android:onClick="toServer"
-            android:text="создать комнату" />
+            android:text="create a room" />
 
         <Space
             android:layout_width="match_parent"
@@ -55,6 +55,6 @@
             android:layout_weight="0.07"
             android:elevation="0dp"
             android:onClick="toClient"
-            android:text="подключиться к комнате " />
+            android:text="connect to room" />
     </LinearLayout>
 </RelativeLayout>

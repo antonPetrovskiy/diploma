@@ -28,7 +28,7 @@
                 android:id="@+id/textView4"
                 android:layout_width="140dp"
                 android:layout_height="46dp"
-                android:text="Название комнаты" />
+                android:text="Room name" />
 
             <EditText
                 android:id="@+id/roomName"
@@ -49,7 +49,7 @@
                 android:id="@+id/textView8"
                 android:layout_width="140dp"
                 android:layout_height="46dp"
-                android:text="Путь к файлу" />
+                android:text="Path to file" />
 
             <EditText
                 android:id="@+id/path"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.06"
             android:onClick="setFileButton"
-            android:text="Выбрать файл" />
+            android:text="select a file" />
 
         <Space
             android:layout_width="match_parent"
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.06"
             android:onClick="shareButton"
-            android:text="Загрузить" />
+            android:text="upload file" />
 
         <Space
             android:layout_width="match_parent"

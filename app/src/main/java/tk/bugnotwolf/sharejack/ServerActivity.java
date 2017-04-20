@@ -149,8 +149,8 @@ public class ServerActivity extends AppCompatActivity {
     }
 
     public void shareButton(View view){
-        streamListener.connect();
         musicPlayer.setFromServer("http://192.168.0.105/audio/ACDC.mp3");
+        streamListener.connect();
         shareButton.setEnabled(false);
 
         seekBar.setOnTouchListener(new View.OnTouchListener() {

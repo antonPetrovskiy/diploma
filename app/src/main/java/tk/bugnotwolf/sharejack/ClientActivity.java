@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import tk.bugnotwolf.sharejack.serverevents.StreamListener;
 import tk.bugnotwolf.sharejack.serverevents.StreamStatus;
@@ -66,12 +67,18 @@ public class ClientActivity extends AppCompatActivity {
         setContentView(R.layout.activity_client);
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        initViews();
+
+
+
+    }
+
+    public void initViews(){
         connectStreamButton = (Button) findViewById(R.id.connectstreamButton);
         disconnectStreamButton = (Button) findViewById(R.id.disconnectStreamButton);
         muteButton = (Button) findViewById(R.id.muteButton);
         timeMinus = (Button) findViewById(R.id.minusButton);
         timePlus = (Button) findViewById(R.id.plusBotton);
-
         connectStreamButton.setEnabled(true);
         disconnectStreamButton.setEnabled(false);
         muteButton.setEnabled(false);
@@ -79,14 +86,18 @@ public class ClientActivity extends AppCompatActivity {
 
     public void connectStreamButton(View view) {
         roomName = (EditText)findViewById(R.id.roomName);
-        streamListener.connect();
+
         if(musicPlayer.setFromServer("http://192.168.0.105/audio/"+roomName.getText().toString()+".mp3")){
-            streamListener.update();
+            while(!musicPlayer.ready){
+            }
+            streamListener.connect();
 
             roomName.setEnabled(false);
             connectStreamButton.setEnabled(false);
             disconnectStreamButton.setEnabled(true);
             muteButton.setEnabled(true);
+        }else{
+            Toast.makeText(this, "Room did not found", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -116,5 +127,6 @@ public class ClientActivity extends AppCompatActivity {
     public void minusButton(View view){
         musicPlayer.getPlayer().seekTo(musicPlayer.getPlayer().getCurrentPosition()-100);
     }
+
 
 }
