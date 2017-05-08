@@ -17,6 +17,7 @@ import tk.bugnotwolf.sharejack.serverevents.WebSocketListener;
 public class ClientActivity extends AppCompatActivity {
     Button disconnectStreamButton;
     Button connectStreamButton;
+    Button startStreamButton;
     Button muteButton;
     Button timeMinus;
     Button timePlus;
@@ -76,29 +77,37 @@ public class ClientActivity extends AppCompatActivity {
     public void initViews(){
         connectStreamButton = (Button) findViewById(R.id.connectstreamButton);
         disconnectStreamButton = (Button) findViewById(R.id.disconnectStreamButton);
+        startStreamButton = (Button) findViewById(R.id.startButton);
         muteButton = (Button) findViewById(R.id.muteButton);
         timeMinus = (Button) findViewById(R.id.minusButton);
         timePlus = (Button) findViewById(R.id.plusBotton);
+        startStreamButton.setEnabled(false);
         connectStreamButton.setEnabled(true);
         disconnectStreamButton.setEnabled(false);
         muteButton.setEnabled(false);
     }
 
+
+
     public void connectStreamButton(View view) {
         roomName = (EditText)findViewById(R.id.roomName);
 
-        if(musicPlayer.setFromServer("http://192.168.0.105/audio/"+roomName.getText().toString()+".mp3")){
-            while(!musicPlayer.ready){
-            }
-            streamListener.connect();
 
+        if(musicPlayer.setFromServer("http://192.168.0.105/audio/"+roomName.getText().toString()+".mp3")){
             roomName.setEnabled(false);
             connectStreamButton.setEnabled(false);
             disconnectStreamButton.setEnabled(true);
+            startStreamButton.setEnabled(true);
             muteButton.setEnabled(true);
         }else{
             Toast.makeText(this, "Room did not found", Toast.LENGTH_LONG).show();
         }
+
+    }
+
+    public void startStreamButton(View view){
+        streamListener.connect();
+        startStreamButton.setEnabled(false);
     }
 
     public void disconnectStreamButton(View view) {

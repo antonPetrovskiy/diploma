@@ -116,7 +116,7 @@ public class ServerActivity extends AppCompatActivity {
     private void seekChange(View v){
         if (musicPlayer.getPlayer().isPlaying()) {
             SeekBar sb = (SeekBar) v;
-            streamListener.play(seekBar.getProgress()/1000);
+            streamListener.play(sb.getProgress()/1000);
         }
     }
 

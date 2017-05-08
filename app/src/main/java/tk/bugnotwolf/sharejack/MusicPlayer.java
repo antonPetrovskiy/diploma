@@ -18,7 +18,7 @@ public class MusicPlayer implements OnPreparedListener{
     private MediaPlayer mPlayer;
     private AppCompatActivity activity;
     private String serverAddress;
-    public boolean ready;
+    public boolean ready = false;
     private boolean muted;
 
     public MusicPlayer(AppCompatActivity a){
