@@ -1,9 +1,11 @@
 package tk.bugnotwolf.sharejack;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +31,7 @@ public class ServerActivity extends AppCompatActivity {
     MusicPlayer musicPlayer;
     public static final int REQ_CODE_PICK_SOUNDFILE = 0;
 
-    private StreamListener streamListener = new WebSocketListener("http://192.168.0.105") {
+    private StreamListener streamListener = new WebSocketListener("http://192.168.137.1") {
         @Override
         public void onPlay(StreamStatus status) {
             int msec = status.getCurrentTime() * 1000;
@@ -78,7 +80,7 @@ public class ServerActivity extends AppCompatActivity {
         playButton.setEnabled(false);
         pauseButton.setEnabled(false);
         stopButton.setEnabled(false);
-        shareButton.setEnabled(true);
+        shareButton.setEnabled(false);
         seekBar.setMax(180000);
     }
 
@@ -122,9 +124,35 @@ public class ServerActivity extends AppCompatActivity {
 
 
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(this);
+        quitDialog.setTitle("You want to exit?");
+
+        quitDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                streamListener.stop();
+                musicPlayer.releaseMP();
+                streamListener.disconnect();
+                finish();
+            }
+        });
+
+        quitDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        quitDialog.show();
+    }
+
     //BUTTONS
     public void setFileButton(View view){
         openFile();
+        shareButton.setEnabled(true);
     }
 
     public void playButton(View view){
@@ -143,15 +171,19 @@ public class ServerActivity extends AppCompatActivity {
 
     public void stopButton(View view){
         streamListener.stop();
-        playButton.setEnabled(true);
+        musicPlayer.releaseMP();
+        //streamListener.disconnect();
+        playButton.setEnabled(false);
         stopButton.setEnabled(false);
         pauseButton.setEnabled(false);
+        shareButton.setEnabled(true);
     }
 
     public void shareButton(View view){
-        musicPlayer.setFromServer("http://192.168.0.105/audio/ACDC.mp3");
+        musicPlayer.setFromServer("http://192.168.137.1/audio/ACDC.mp3");
         streamListener.connect();
         shareButton.setEnabled(false);
+        stopButton.setEnabled(true);
 
         seekBar.setOnTouchListener(new View.OnTouchListener() {
             @Override

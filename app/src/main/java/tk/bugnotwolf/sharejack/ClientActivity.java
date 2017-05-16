@@ -1,7 +1,9 @@
 package tk.bugnotwolf.sharejack;
 
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,11 +28,11 @@ public class ClientActivity extends AppCompatActivity {
 
     private MusicPlayer musicPlayer = new MusicPlayer(this);
 
-    private StreamListener streamListener = new WebSocketListener("http://192.168.0.105") {
+    private StreamListener streamListener = new WebSocketListener("http://192.168.137.1") {
         @Override
         public void onPlay(StreamStatus status) {
             int msec = status.getCurrentTime() * 1000;
-            musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
+            musicPlayer.getPlayer().seekTo(msec-100); // TODO avoid implementation dependent player
             musicPlayer.startAudio();
         }
 
@@ -56,9 +58,13 @@ public class ClientActivity extends AppCompatActivity {
         @Override
         public void onStatus(StreamStatus status) {
             int msec = status.getCurrentTime() * 1000;
-            musicPlayer.getPlayer().seekTo(msec); // TODO avoid implementation dependent player
-            if(status.isPlaying())
+            musicPlayer.getPlayer().seekTo(msec+300); // TODO avoid implementation dependent player
+            if(status.isPlaying()){
+                streamListener.pause(musicPlayer.getPlayer().getCurrentPosition()/1000);
+                streamListener.play(musicPlayer.getPlayer().getCurrentPosition()/1000);
                 musicPlayer.startAudio();
+            }
+
         }
     };
 
@@ -88,12 +94,35 @@ public class ClientActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder quitDialog = new AlertDialog.Builder(this);
+        quitDialog.setTitle("You want to exit?");
+
+        quitDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                musicPlayer.releaseMP();
+                streamListener.disconnect();
+                finish();
+            }
+        });
+
+        quitDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+        quitDialog.show();
+    }
 
     public void connectStreamButton(View view) {
         roomName = (EditText)findViewById(R.id.roomName);
 
 
-        if(musicPlayer.setFromServer("http://192.168.0.105/audio/"+roomName.getText().toString()+".mp3")){
+        if(musicPlayer.setFromServer("http://192.168.137.1/audio/"+roomName.getText().toString()+".mp3")){
             roomName.setEnabled(false);
             connectStreamButton.setEnabled(false);
             disconnectStreamButton.setEnabled(true);
@@ -102,7 +131,6 @@ public class ClientActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Room did not found", Toast.LENGTH_LONG).show();
         }
-
     }
 
     public void startStreamButton(View view){

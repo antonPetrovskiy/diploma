@@ -24,21 +24,7 @@ public class MusicPlayer implements OnPreparedListener{
     public MusicPlayer(AppCompatActivity a){
         activity = a;
     }
-
-
-    //delete
-    public void setFromPath(String s){
-        mPlayer = new MediaPlayer();
-        try {
-            mPlayer.setDataSource(activity, Uri.parse(s));
-            mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mPlayer.prepare();
-            Toast.makeText(activity, "Файл загружен", Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            Toast.makeText(activity, "You might not set the URI correctly!", Toast.LENGTH_LONG).show();
-        }
-        ready = true;
-    }
+    
 
 
     public boolean setFromServer(String s){
